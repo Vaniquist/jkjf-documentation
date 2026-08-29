@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKJF Documentation - Aug 3 to Aug 15</title>
+    <title>12 Days Documentation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
     <style>
+
         :root {
             --primary: #2563EB;
             --secondary: #0D9488;
@@ -64,6 +64,8 @@
             transition: background-color 0.3s ease, color 0.3s ease;
             position: relative;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .blob {
@@ -145,7 +147,6 @@
             0%, 100% { transform: scale(1); opacity: 1; }
             50% { transform: scale(1.35); opacity: 0.7; }
         }
-        }
 
         .burger-btn {
             width: 42px;
@@ -174,32 +175,8 @@
             stroke-linecap: round;
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-btn {
-            background: var(--accent-gradient-1);
-            color: #fff;
-            border: none;
-            padding: 0.55rem 1rem;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: transform 0.15s ease, opacity 0.15s ease;
-        }
-
-        .header-btn:hover {
-            opacity: 0.92;
-            transform: translateY(-1px);
-        }
-
-        /* On narrow screens let the header wrap to two rows instead of
-           squeezing the logo text and the button into each other. */
+        /* On narrow screens let the header wrap if the logo text runs
+           long, instead of clipping. */
         @media (max-width: 480px) {
             .site-header {
                 height: auto;
@@ -208,9 +185,21 @@
                 padding: 14px 20px;
             }
             .site-brand { font-size: 1.15rem; }
-            .header-right { width: 100%; justify-content: flex-end; }
-            .header-btn { font-size: 0.78rem; padding: 0.5rem 0.85rem; }
-            body { padding-top: 128px; }
+            body { padding-top: 128px; padding-left: 14px; padding-right: 14px; }
+            .timeline { padding-left: 40px; }
+            .timeline::before { left: 15px; }
+            .timeline-dot { left: -40px; width: 32px; height: 32px; font-size: 12px; }
+            .day-box { padding: 14px 16px; }
+        }
+
+        /* Wider screens get a bit more breathing room instead of staying
+           pinned to the same narrow phone-width column. */
+        @media (min-width: 900px) {
+            .timeline { max-width: 760px; padding-left: 64px; }
+            .timeline::before { left: 23px; }
+            .timeline-dot { left: -64px; width: 44px; height: 44px; font-size: 15px; }
+            .day-box { padding: 22px 26px; }
+            .caption-body { font-size: 15px; }
         }
 
         /* ---------- PAGE TITLE ---------- */
@@ -233,116 +222,113 @@
         }
 
         /* ---------- DAY GRID ---------- */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
+        /* ---------- TIMELINE ---------- */
+        .timeline {
+            position: relative;
+            max-width: 680px;
             margin: 0 auto;
+            padding-left: 52px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: linear-gradient(var(--primary), var(--secondary), var(--accent));
+            opacity: 0.5;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -52px;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: var(--shadow-sm);
+            border: 3px solid var(--bg-color);
         }
 
         .day-box {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 18px;
-            text-align: center;
+            border-radius: 20px;
+            padding: 18px 20px;
             box-shadow: var(--shadow-sm);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        box-shadow 0.3s ease,
-                        border-color 0.3s ease;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
         }
 
         .day-box:hover {
             border-color: var(--accent);
             box-shadow: var(--shadow-lg);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
         }
 
         .day-title {
-            background: var(--accent-gradient-1);
-            color: #fff;
-            padding: 10px;
-            border-radius: 14px;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            margin-bottom: 14px;
-            font-size: 15px;
-            letter-spacing: 0.01em;
+            font-size: 13px;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--secondary);
+            margin-bottom: 10px;
         }
 
+        /* Hidden by default — only shown once a real photo exists and
+           successfully loads, so pages without photos yet don't show a
+           string of empty placeholder boxes. */
         .upload-area {
             width: 100%;
-            height: 190px;
-            border: 2px dashed var(--card-border);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            height: 200px;
+            border-radius: 14px;
             overflow: hidden;
-            position: relative;
-            background: var(--bg-color);
-            transition: border-color 0.2s ease;
-        }
-
-        .upload-area:hover {
-            border-color: var(--secondary);
+            margin-bottom: 4px;
         }
 
         .upload-area img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-        }
-
-        .upload-text {
-            color: var(--secondary);
-            font-size: 13px;
-            font-weight: 600;
-            padding: 0 12px;
-        }
-
-        .upload-area input {
-            display: none;
-        }
-
-        .caption {
-            width: 100%;
-            margin-top: 12px;
-            padding: 10px 12px;
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 14px;
-        }
-
-        .caption:focus {
-            outline: 2px solid var(--accent);
-            outline-offset: 1px;
-        }
-
-        .btn-save {
             display: block;
-            margin: 40px auto 0;
-            padding: 15px 34px;
-            background: var(--accent-gradient-2);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
+        }
+
+        .caption-text {
+            width: 100%;
+        }
+
+        .caption-heading {
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
-            cursor: pointer;
             font-size: 15px;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.15s ease, box-shadow 0.2s ease;
+            color: var(--primary);
+            letter-spacing: -0.01em;
+            margin-bottom: 6px;
+            line-height: 1.35;
         }
 
-        .btn-save:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+        .caption-body {
+            font-size: 14px;
+            line-height: 1.65;
+            color: var(--text-color);
+            opacity: 0.82;
+            text-align: left;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         /* ---------- BURGER DRAWER (matches chooserole.html exactly) ---------- */
@@ -482,12 +468,11 @@
         }
     </style>
 </head>
+
 <body>
-
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
-
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
 
     <header class="site-header" id="siteHeader">
         <div class="header-left">
@@ -500,9 +485,6 @@
             </button>
             <a href="#" class="site-brand">JKJF<span class="dot">.</span></a>
         </div>
-        <div class="header-right">
-            <button class="header-btn" id="clearAllBtn">Clear All</button>
-        </div>
     </header>
 
     <nav class="menu-drawer" id="menuDrawer">
@@ -510,7 +492,9 @@
             <li>
                 <button class="menu-item" id="shareBtn">
                     <span>Share Page</span>
-                    <svg width="18" height="18" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+                    <svg width="18" height="18" fill="none" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+                    </svg>
                 </button>
             </li>
             <li>
@@ -519,96 +503,126 @@
                     <div class="toggle-switch"></div>
                 </button>
             </li>
-            <li>
-                <button class="menu-item" id="clearAllMenuBtn">
-                    <span>Clear All Photos</span>
-                    <svg width="18" height="18" fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/></svg>
-                </button>
-            </li>
         </ul>
     </nav>
 
     <div class="overlay" id="drawerOverlay"></div>
 
     <h1 class="page-title">12 Days Document</h1>
-    <p class="page-subtitle">August 3 - August 15, 2026</p>
+    <p class="page-subtitle">A day-by-day log of building JKJF Job Hunt</p>
 
-    <div class="grid" id="grid"></div>
-    <button class="btn-save" id="saveBtn">Save All Photos</button>
+    <div class="timeline" id="grid"></div>
 
     <div class="toast" id="toastNotification">Link copied to clipboard!</div>
 
     <script>
         const days = [
-            "Aug 3", "Aug 4", "Aug 5", "Aug 6", "Aug 7", "Aug 8",
-            "Aug 9", "Aug 10", "Aug 11", "Aug 12", "Aug 13", "Aug 14", "Aug 15"
+            "Day 1", "Day 2", "Day 3", "Day 4", "Day 5", "Day 6",
+            "Day 7", "Day 8", "Day 9", "Day 10", "Day 11", "Day 12"
         ];
+
+        /* Image sources — must be files hosted in this same repo under
+           an /images folder (e.g. images/day01.jpg), NOT a local
+           file:// path off your phone. A file:// path only exists on
+           the one device that created it; nobody visiting the live
+           Netlify site (including you, once it's live) can reach it.
+           Upload each day's photo to /images alongside your other site
+           files, named to match the list below, and it'll show up
+           automatically — no other code changes needed. */
+        const images = [
+            "day1.jpeg",
+            "day2.jpeg",
+            "day3.jpeg",
+            "day4.png",
+            "day5.png",
+            "day6.jpeg",
+            "day7.png",
+            "day8.png",
+            "day9.png",
+            "day10.png",
+            "day11.jpeg",
+            "day12.jpeg"
+        ];
+
+        const captions = [
+            "Our group came together to plan the website that we wanted to build. We chose JobHunt - a website where job seekers can look for jobs and employers can find employees",
+            "Ken illustrated and designed the raw layout of the website on paper. We made the homepage, job listings page, and personnel page.",
+            `Login and Registration System
+We coded the user login and registration. We used Supabase to make the sign-up for users and companies secure.`,
+            "We started coding the database using Supabase. We created tables for job seekers, companies, and jobs.",
+            "We began coding and tested if the database was working. We inserted sample data and the saving and retrieving of data worked.",
+            `Frontend Coding Homepage
+We started coding the frontend. We made the homepage with a login page. And the next page lets you choose your role.`,
+            "We made the personnel page. Here employers can look for employees' profile and see who's fit for their company",
+            "We made it so employers/companies can also post job offerings of their own, which the job seekers can apply to ",
+            "We made the Contact button. When a user applies, the application with resume and details is saved in the database. The company also gets notified.",
+            `Demo Post
+Freyzsa gathered sample pictures and information to be used as our demo.`,
+            `Final Testing and debugging
+Kenneth and Calamohoy made documentation and did bug testing on the whole website.`,
+            "We are now finalizing our output and we are studying each part. We also studied the proper sequence of each part and how it works."
+        ];
+
         const grid = document.getElementById('grid');
 
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Some captions are written as "Title line \n body text" and some
+        // are just a plain sentence. Rendering the whole thing as one
+        // plain-text blob collapses the line break, so a title and its
+        // body run together as one paragraph. Splitting them here gives
+        // the title its own bold line and the body its own paragraph.
+        function renderCaption(raw) {
+            const lines = String(raw || '').split('\n').map(l => l.trim()).filter(Boolean);
+            if (lines.length === 0) return '';
+            if (lines.length === 1) {
+                return `<div class="caption-body">${escapeHtml(lines[0])}</div>`;
+            }
+            const heading = escapeHtml(lines[0]);
+            const body = escapeHtml(lines.slice(1).join(' '));
+            return `<div class="caption-heading">${heading}</div><div class="caption-body">${body}</div>`;
+        }
+
+        const dotColors = ['var(--primary)', 'var(--secondary)', 'var(--accent)'];
+
         days.forEach((day, index) => {
-            const box = document.createElement('div');
-            box.className = 'day-box';
-            box.innerHTML = `
-                <div class="day-title">${day}</div>
-                <label class="upload-area" for="upload${index}">
-                    <span class="upload-text" id="text${index}">Click to Upload Photo</span>
-                    <img id="preview${index}" style="display:none;">
-                    <input type="file" id="upload${index}" accept="image/*" onchange="previewImage(event, ${index})">
-                </label>
-                <input type="text" class="caption" id="caption${index}" placeholder="Add caption here...">
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            item.innerHTML = `
+                <div class="timeline-dot" style="background:${dotColors[index % dotColors.length]}">${index + 1}</div>
+                <div class="day-box">
+                    <div class="day-title">${day}</div>
+                    <div class="upload-area" id="area${index}" style="display:none;">
+                        <img id="preview${index}" alt="${day}">
+                    </div>
+                    <div class="caption-text" id="caption${index}"></div>
+                </div>
             `;
-            grid.appendChild(box);
-        });
 
-        function previewImage(event, index) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`preview${index}`).src = e.target.result;
-                    document.getElementById(`preview${index}`).style.display = 'block';
-                    document.getElementById(`text${index}`).style.display = 'none';
-                    localStorage.setItem(`img${index}`, e.target.result);
-                }
-                reader.readAsDataURL(file);
+            const area = item.querySelector(`#area${index}`);
+            const img = item.querySelector(`#preview${index}`);
+            const caption = item.querySelector(`#caption${index}`);
+
+            const src = images[index];
+            if (src) {
+                // Only reveal the image slot once the photo actually
+                // exists and loads — until then it stays hidden, so a
+                // day without a photo yet doesn't leave an empty box.
+                img.onload = () => { area.style.display = 'block'; };
+                img.onerror = () => { area.style.display = 'none'; };
+                img.src = src;
             }
-        }
 
-        function saveData() {
-            days.forEach((day, index) => {
-                const caption = document.getElementById(`caption${index}`).value;
-                localStorage.setItem(`caption${index}`, caption);
-            });
-            showToast('Saved! Pictures and captions are saved in your browser.');
-        }
+            caption.innerHTML = renderCaption(captions[index]);
 
-        function clearAll() {
-            if (confirm('Delete all photos and captions?')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        window.onload = function() {
-            days.forEach((day, index) => {
-                const savedImg = localStorage.getItem(`img${index}`);
-                const savedCap = localStorage.getItem(`caption${index}`);
-                if (savedImg) {
-                    document.getElementById(`preview${index}`).src = savedImg;
-                    document.getElementById(`preview${index}`).style.display = 'block';
-                    document.getElementById(`text${index}`).style.display = 'none';
-                }
-                if (savedCap) {
-                    document.getElementById(`caption${index}`).value = savedCap;
-                }
-            });
-        }
-
-        document.getElementById('saveBtn').addEventListener('click', saveData);
-        document.getElementById('clearAllBtn').addEventListener('click', clearAll);
-        document.getElementById('clearAllMenuBtn').addEventListener('click', () => {
-            toggleMenu();
-            clearAll();
+            grid.appendChild(item);
         });
 
         const burgerBtn = document.getElementById('burgerBtn');
@@ -636,13 +650,13 @@
             }
         });
 
-        /* THEME: honors system light/dark by default, but remembers a manual choice */
         function applyTheme(theme) {
             if (theme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
             } else {
                 document.documentElement.removeAttribute('data-theme');
             }
+
             themeLabel.textContent = theme === 'dark' ? 'Dark Mode' : 'Light Mode';
         }
 
@@ -656,18 +670,17 @@
             }
         });
 
-        themeToggleBtn.addEventListener('click', () => {
+        function switchTheme() {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const newTheme = isDark ? 'light' : 'dark';
             localStorage.setItem('docTheme', newTheme);
             applyTheme(newTheme);
-        });
+        }
 
-        /* Header divider line — appears once you scroll past the top */
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 12) siteHeader.classList.add('scrolled');
-            else siteHeader.classList.remove('scrolled');
-        }, { passive: true });
+        themeToggleBtn.addEventListener('click', () => {
+            switchTheme();
+            toggleMenu();
+        });
 
         shareBtn.addEventListener('click', async () => {
             if (navigator.share) {
@@ -677,12 +690,17 @@
                         url: window.location.href
                     });
                 } catch (err) {}
-            } else {
+            } else if (navigator.clipboard) {
                 navigator.clipboard.writeText(window.location.href);
                 showToast('Link copied to clipboard!');
             }
             toggleMenu();
         });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 12) siteHeader.classList.add('scrolled');
+            else siteHeader.classList.remove('scrolled');
+        }, { passive: true });
 
         function showToast(message) {
             toast.textContent = message;
